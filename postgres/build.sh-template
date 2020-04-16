@@ -1,0 +1,8 @@
+DIR=$(dirname $0)
+
+docker build -t postgres:step1 ${DIR}
+
+if [ -n "{{REGISTRY}}" ]; then
+    docker tag postgres:step1 {{REGISTRY}}postgres:step1
+    docker push {{REGISTRY}}postgres:step1
+fi
