@@ -11,5 +11,5 @@ spec:
   - name: usersvc
     port: 5000
   selector:
-    service: usersvc
+    app: usersvc
 

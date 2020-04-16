@@ -1,20 +1,33 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
   name: postgres
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        service: postgres
+        app: postgres
     spec:
       containers:
       - name: postgres
-        image: postgres:9.6
+        image: postgres:step1
         resources: {}
+        env:
+        #- name: POSTGRES_HOST_AUTH_METHOD
+          #value: trust
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        ports:
+        - name: postgres
+          containerPort: 5432 
       restartPolicy: Always
 status: {}

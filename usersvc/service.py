@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-import os
+import os, traceback
 import socket
 import time
 import uuid
@@ -94,11 +94,10 @@ def setup():
     try:
         conn = get_db("postgres")
         conn.autocommit = True
-
+        logging.debug("after getting postgres db: got args %s" % (conn))
         cursor = conn.cursor()
         cursor.execute("SELECT 1 FROM pg_database WHERE datname = 'users'")
         results = cursor.fetchall()
-
         if not results:
             cursor.execute("CREATE DATABASE users")
 
@@ -184,7 +183,7 @@ def handle_user_put(req, username):
 def handle_user(username):
     rc = RichStatus.fromError("impossible error")
     logging.debug("handle_user %s: method %s" % (username, request.method))
-    
+
     try:
         rc = setup()
 
@@ -194,6 +193,9 @@ def handle_user(username):
             else:
                 rc = handle_user_get(request, username)
     except Exception as e:
+     
+        traceback.print_exc(file=sys.stdout)
+        logging.debug("error: %s" % (e))
         rc = RichStatus.fromError("%s: %s failed: %s" % (username, request.method, e))
 
     return jsonify(rc.toDict())
