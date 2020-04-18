@@ -11,4 +11,4 @@ spec:
   - name: usersvc
     port: 80
   selector:
-    service: usersvc
+    app: usersvc
