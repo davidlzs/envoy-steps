@@ -1,0 +1,11 @@
+# build docker file
+docker build . -t google_proxy:latest
+
+# run the image as daemon
+docker run --rm -d -p 10000:10000 google_proxy:latest
+
+# run the image interactively
+docker run --rm -it google_proxy:latest bash -s
+
+# verify
+curl -v http://localhost:10000
