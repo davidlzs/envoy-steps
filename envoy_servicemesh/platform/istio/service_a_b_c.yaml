@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+  labels:
+    app: service-a
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8081
+    name: http
+  selector:
+    app: service-a
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-a
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: service-a
+        version: v1
+    spec:
+      containers:
+      - name: service-a
+        image: istio_service_a:latest
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  labels:
+    app: service-b
+spec:
+  ports:
+  - port: 8082
+    name: http
+    targetPort: 8082
+  selector:
+    app: service-b
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-b
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: service-b
+        version: v1
+    spec:
+      containers:
+      - name: service-b
+        image: istio_service_b:latest
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-c
+  labels:
+    app: service-c
+spec:
+  ports:
+  - port: 8083
+    name: http
+    targetPort: 8083
+  selector:
+    app: service-c
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-c-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-c
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: service-c
+        version: v1
+    spec:
+      containers:
+      - name: service-c
+        image: istio_service_c:latest
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 8083

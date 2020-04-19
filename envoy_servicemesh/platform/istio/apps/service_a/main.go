@@ -1,0 +1,76 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+
+	"net/http"
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Fprintf(w, "Calling Service B\n")
+
+	req, err := http.NewRequest("GET", "http://service-b:8082/", nil)
+	if err != nil {
+		fmt.Printf("\nPrepare req from service a: %s\n", err)
+	}
+
+	req.Header.Add("x-request-id", r.Header.Get("x-request-id"))
+	req.Header.Add("x-b3-traceid", r.Header.Get("x-b3-traceid"))
+	req.Header.Add("x-b3-spanid", r.Header.Get("x-b3-spanid"))
+	req.Header.Add("x-b3-parentspanid", r.Header.Get("x-b3-parentspanid"))
+	req.Header.Add("x-b3-sampled", r.Header.Get("x-b3-sampled"))
+	req.Header.Add("x-b3-flags", r.Header.Get("x-b3-flags"))
+	req.Header.Add("x-ot-span-context", r.Header.Get("x-ot-span-context"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
+	if err != nil {
+		fmt.Printf("\nGET from service a: %s\n", err)
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("\nRead from service a: %s\n", err)
+	}
+	fmt.Fprintf(w, string(body))
+	fmt.Fprintf(w, "\nHello from service A\n")
+
+	fmt.Fprintf(w, "\nCalling Service C\n")
+	req, err = http.NewRequest("GET", "http://service-c:8083/", nil)
+	if err != nil {
+		fmt.Printf("\nPrepare req from service a: %s\n", err)
+	}
+
+	req.Header.Add("x-request-id", r.Header.Get("x-request-id"))
+	req.Header.Add("x-b3-traceid", r.Header.Get("x-b3-traceid"))
+	req.Header.Add("x-b3-spanid", r.Header.Get("x-b3-spanid"))
+	req.Header.Add("x-b3-parentspanid", r.Header.Get("x-b3-parentspanid"))
+	req.Header.Add("x-b3-sampled", r.Header.Get("x-b3-sampled"))
+	req.Header.Add("x-b3-flags", r.Header.Get("x-b3-flags"))
+	req.Header.Add("x-ot-span-context", r.Header.Get("x-ot-span-context"))
+
+	client = &http.Client{}
+	resp, err = client.Do(req)
+
+	if err != nil {
+		fmt.Printf("\nGET from service a: %s\n", err)
+	}
+
+	defer resp.Body.Close()
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("\nRead from service a: %s\n", err)
+	}
+
+	fmt.Fprintf(w, string(body))
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(":8081", nil))
+}
