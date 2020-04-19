@@ -26,8 +26,7 @@
         ```
     * Set `GATEWAY_URL`
         ```bash
-        export 
-        GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+        export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
         ```
     * Request service_a api:
         ```bash
