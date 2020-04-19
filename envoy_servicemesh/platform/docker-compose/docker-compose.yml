@@ -19,7 +19,7 @@ services:
     command: "/usr/local/bin/envoy -c /etc/envoy-config.yaml --v2-config-only -l info --service-cluster 'service-a' --service-node 'service-a' --log-format '[METADATA][%Y-%m-%d %T.%e][%t][%l][%n] %v'"
   
   service_a:
-    build: service_a/
+    build: ../../service_a/
     ports:
     - "8081:8081"
 
@@ -32,7 +32,7 @@ services:
     command: "/usr/local/bin/envoy -c /etc/envoy-config.yaml --v2-config-only -l info --service-cluster 'service-b' --service-node 'service-b' --log-format '[METADATA][%Y-%m-%d %T.%e][%t][%l][%n] %v'"  
 
   service_b:
-    build: service_b/
+    build: ../../service_b/
     ports:
     - "8082:8082"
 
@@ -45,6 +45,6 @@ services:
     command: "/usr/local/bin/envoy -c /etc/envoy-config.yaml --v2-config-only -l info --service-cluster 'service-c' --service-node 'service-c' --log-format '[METADATA][%Y-%m-%d %T.%e][%t][%l][%n] %v'"  
 
   service_c:
-    build: service_c/
+    build: ../../service_c/
     ports:
     - "8083:8083"  
